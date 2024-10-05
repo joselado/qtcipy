@@ -131,8 +131,9 @@ def SCF_Hubbard(scf,maxerror=1e-3,maxite=None,
     ite = 0
     import time
     t0 = time.time() # get the time
+    if info: print("Starting SCF loop")
     while True: # infinite loop
-        if info: print("Starting SCF loop")
+        if info: print("### SCF iteration "+str(ite)+" ###")
         ite += 1 # iteration
         hup = h0 + diags(U*(ddn_old-0.5),shape=h0.shape) # up Hamiltonian
         hdn = h0 + diags(U*(dup_old-0.5),shape=h0.shape) # down Hamiltonian

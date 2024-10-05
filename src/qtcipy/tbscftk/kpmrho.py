@@ -1,12 +1,17 @@
 
-### NB, this assumes a single orbital model
-
-## if you have a multiorbital model, this will likely not work
-
 import numpy as np
 import sys
 import os
-sys.path.append(os.environ["PYQULAROOT"]) # pyqula
+try:
+    sys.path.append(os.environ["PYQULAROOT"]) # pyqula
+    from pyqula import geometry
+except:
+    print("pyqula has to be installed")
+    print(" 1) use 'pip install pyqula' in your terminal")
+    print(" 2) OR create an environmental variable PYQULAROOT with the address of pyqula in your system")
+    exit()
+
+
 
 
 def get_density_i_from_dos(m,fermi=0.,**kwargs):
@@ -65,10 +70,7 @@ def get_den_kpm_qtci_general(h,log=None,**kwargs):
     f = get_function(h,**kwargs) # get the function to interpolate
     nb = get_nbits(h,**kwargs) # return the number of bits
     lim = get_lim(h,**kwargs) # get the limits
-    if log is not None: qtci_maxm = log["opt_qtci_maxm"] # get the maxm
-    else: qtci_maxm = 5 # reasonable guess
     IP = get_interpolator(h,f,nb,lim,
-            qtci_maxm=qtci_maxm,
             **kwargs) # keyword arguments
     update_log(log,h,IP,**kwargs) # update the log
     out = evaluate_interpolator(h,IP,**kwargs) # evaluate the interpolator
