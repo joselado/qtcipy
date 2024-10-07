@@ -48,7 +48,7 @@ We will now see how an interface between two moire patterns can be computed
 from qtcipy.tbscftk import hamiltonians
 import numpy as np
 
-L = 12 # exponential length, leads to 2**L sites
+L = 14 # exponential length, leads to 2**L sites
 H = hamiltonians.chain(L) # get the Hamiltonian
 
 def f(r):
