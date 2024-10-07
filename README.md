@@ -20,7 +20,7 @@ the kernel polynomial method for an interacting Hubbard Hamiltonian.
 from qtcipy.tbscftk import hamiltonians
 import numpy as np
 
-L = 8 # exponential length, leads to 2**L sites
+L = 12 # exponential length, leads to 2**L sites
 H = hamiltonians.chain(L) # get the Hamiltonian
 
 def f(r):

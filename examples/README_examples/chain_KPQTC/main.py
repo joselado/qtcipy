@@ -4,7 +4,7 @@ sys.path.append(os.getcwd()+"/../../../src")
 from qtcipy.tbscftk import hamiltonians
 import numpy as np
 
-L = 6 # exponential length, leads to 2**L sites
+L = 10 # exponential length, leads to 2**L sites
 H = hamiltonians.chain(L) # get the Hamiltonian
 
 def f(r):
@@ -16,7 +16,7 @@ H.modify_hopping(f) # modify the hopping
 SCF = H.get_SCF_Hubbard(U=3.0) # generate a selfconsistent object
 
 SCF.solve(use_qtci=True,use_kpm=True,info=True,info_qtci=True,delta=1e-1,
-        maxite=10)
+        maxite=10,use_dynamical_qtci=True)
 Mz = SCF.Mz # selfconsistent magnetization
 
 

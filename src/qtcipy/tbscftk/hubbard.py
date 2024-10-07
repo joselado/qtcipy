@@ -144,7 +144,10 @@ def SCF_Hubbard(scf,maxerror=1e-3,maxite=None,
         else: # compute explicitly
             ddn = get_den(hdn,log=log0,**kwargs) # generate down density
             dup = get_den(hup,log=log0,**kwargs) # generate up density
+        # overwrite the QTCI keyword arguments
         from .dynamicalmixing import error_hubbard
+        from .dynamicalqtci import overwrite_qtci_kwargs
+        overwrite_qtci_kwargs(scf,kwargs) # overwrite parameters
         error = error_hubbard([dup,ddn],[dup_old,ddn_old]) # compute error
 #        error = np.mean(np.abs(ddn-ddn_old) + np.abs(dup-dup_old)) # error
         if log is not None: # do the logs

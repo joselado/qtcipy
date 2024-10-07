@@ -142,6 +142,8 @@ def get_ci(f, qgrid=None, nb=1,
     args.fullPiv = qtci_fullPiv # search the full Pi matrix
     ci = xfacpy.QTensorCI(f1d=f, qgrid=qgrid, args=args)  # construct a tci
     # select the mode
+#    print("Here")
+#    print(qtci_accumulative)
     if qtci_accumulative: # accumulative mode
         ci,qtci_args = accumulative_train(ci,qtci_tol=qtci_tol,nb=nb,f=f,**kwargs)
     else: # conventional mode
@@ -160,14 +162,14 @@ def accumulative_train(ci,qtci_tol=1e-3,qgrid=None,
     if info_qtci:
         print("Accumulative mode")
     ci = xfacpy.to_tci1(ci) # to type one
-    batch = 3 # three times
+    batch = 2 # two times
     while True: # infinite loop
         tols = []
         for j in range(batch): # do this once
             ci.iterate(1) # iterate
             toli = ci.pivotError[len(ci.pivotError)-1] # tolerance in evaluated points
             tols.append(toli) # store
-        if np.mean(tols)<qtci_tol: 
+        if np.max(tols)<qtci_tol: 
 #            print("Accumulative reached error, stopping",np.min(tols))
             break # stop loop
         # other stopping criteria

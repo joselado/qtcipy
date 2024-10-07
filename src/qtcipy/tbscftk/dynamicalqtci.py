@@ -42,12 +42,16 @@ def get_default(v):
     return qtci_kwargs # return this
 
 
-
+def overwrite_qtci_kwargs(scf,kwargs):
+    """Overwrite the QTCI keyword arguments"""
+    if scf.qtci_kwargs is not None: # if they are set
+        for key in scf.qtci_kwargs: kwargs[key] = scf.qtci_kwargs[key]
 
 from copy import deepcopy as cp
 
 
-def initial_qtci_kwargs(SCF,**kwargs):
+def initial_qtci_kwargs(SCF,use_dynamical_qtci=False,
+        **kwargs):
     """Return a reasonable initial guess for the kwargs
     of a QTCI for an SCF object"""
     if "use_qtci" in kwargs:
@@ -69,9 +73,11 @@ def initial_qtci_kwargs(SCF,**kwargs):
         kw["maxite"] = 1 # one iteration
         mz = SCF0.H0.get_moire()*SCF0.MF[0] # make a guess
         # get some kwargs
-        frac,qtci_kwargs = optimal_qtci(mz,recursive=True) 
-        SCF0.qtci_kwargs = qtci_kwargs # use these ones
-        SCF0.solve(**kw) # one iteration without accuracy
+        if use_dynamical_qtci: # use an adaptive QTCI
+            frac,qtci_kwargs = optimal_qtci(mz,recursive=True) 
+            SCF0.qtci_kwargs = qtci_kwargs # use these ones
+            SCF0.solve(**kw) # one iteration without accuracy
+        else: return qtci_kwargs
         print("SCF Initialization DONE")
         return SCF0.qtci_kwargs
     else: return SCF.qtci_kwargs # return this choice

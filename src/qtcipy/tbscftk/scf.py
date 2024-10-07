@@ -28,6 +28,7 @@ class SCF_Hubbard():
         from .hubbard import SCF_Hubbard
         from .dynamicalqtci import initial_qtci_kwargs
         self.qtci_kwargs = initial_qtci_kwargs(self,**kwargs)
+        for key in self.qtci_kwargs: kwargs[key] = self.qtci_kwargs[key]
         return SCF_Hubbard(self,**kwargs)
     def estimate_time(self,**kwargs):
         from .timeestimator import testimate
