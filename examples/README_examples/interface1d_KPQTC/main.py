@@ -9,14 +9,16 @@ H = hamiltonians.chain(L) # get the Hamiltonian
 
 def f(r):
     """Modulation of the hopping"""
-    omega = np.pi*2.*np.sqrt(2.)/(2**L/10) # frequency of the modulation
-    return 1. + 0.2*np.cos(omega*r[0]) # return correction to the hopping
+    omega1 = np.pi*2.*np.sqrt(2.)/(2**L/10) # left frequency
+    omega2 = np.sqrt(3)*omega1 # right frequency
+    if r[0]<0.: return 0.2*np.sin(omega1*r[0]) # return correction to the hopping
+    else: return 0.1*np.sin(omega2*r[0]) # return correction to the hopping
 H.modify_hopping(f) # modify the hopping 
 
 SCF = H.get_SCF_Hubbard(U=3.0) # generate a selfconsistent object
 
 SCF.solve(use_qtci=True,use_kpm=True,info=True,info_qtci=True,delta=1e-1,
-        maxite=10,use_dynamical_qtci=False)
+        maxite=10,use_dynamical_qtci=False,chiral_AF=True)
 Mz = SCF.Mz # selfconsistent magnetization
 
 

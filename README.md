@@ -38,6 +38,43 @@ Mz = SCF.Mz # selfconsistent magnetization
 The moire Hamiltonian and resulting selfconsistent electronic order are
 ![Alt text](images/1dmoire.png?raw=true "Interaction-driven order with KPQTC")
 
+
+
+### Moire domain wall in an interacting one-dimensional model
+
+We will now see how an interface between two moire patterns can be computed
+
+```python
+from qtcipy.tbscftk import hamiltonians
+import numpy as np
+
+L = 12 # exponential length, leads to 2**L sites
+H = hamiltonians.chain(L) # get the Hamiltonian
+
+def f(r):
+    """Modulation of the hopping"""
+    omega1 = np.pi*2.*np.sqrt(2.)/(2**L/10) # left frequency
+    omega2 = np.sqrt(3)*omega1 # right frequency
+    if r[0]<0.: return 0.2*np.sin(omega1*r[0]) # return correction to the hopping
+    else: return 0.1*np.sin(omega2*r[0]) # return correction to the hopping
+
+H.modify_hopping(f) # modify the hopping 
+
+SCF = H.get_SCF_Hubbard(U=3.0) # generate a selfconsistent object
+
+SCF.solve(use_qtci=True,use_kpm=True)
+Mz = SCF.Mz # selfconsistent magnetization
+```
+
+The moire Hamiltonian and resulting selfconsistent electronic order are
+![Alt text](images/1dinterface.png?raw=true "Interaction-driven order with KPQTC in a moire interface")
+
+
+
+
+
+
+
 # Installation
 
 You need to have Julia installed in your computer.
