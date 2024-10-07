@@ -99,7 +99,7 @@ def get_mz(h,use_kpm=False,**kwargs):
 
 
 
-def SCF_Hubbard(scf,maxerror=1e-3,maxite=None,
+def SCF_Hubbard(scf,maxerror=1e-3,maxite=100,
                 log=None, # dictionary for logs
                 chiral_AF = False, # flag to enforce chiral AF
                 mix=0.5,info=False,**kwargs):
