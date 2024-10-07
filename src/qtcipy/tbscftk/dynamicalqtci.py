@@ -55,7 +55,7 @@ def initial_qtci_kwargs(SCF,use_dynamical_qtci=False,
     """Return a reasonable initial guess for the kwargs
     of a QTCI for an SCF object"""
     if "use_qtci" in kwargs:
-        if not kwargs["use_qtci"]: return {}
+        if not kwargs["use_qtci"]: return {} # return an empty list
     if SCF.qtci_kwargs is None: # first iteration
         qtci_kwargs = {"qtci_maxm":400} # reasonable guess
         qtci_kwargs["qtci_accumulative"] = True # accumulative mode

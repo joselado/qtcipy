@@ -71,9 +71,40 @@ The moire Hamiltonian and resulting selfconsistent electronic order are
 
 
 
+### Non-uniform strained moire in an interacting one-dimensional model
+
+We will now compute a moire pattern with non-uniform strain
+
+```python
+from qtcipy.tbscftk import hamiltonians
+import numpy as np
+
+L = 14 # exponential length, leads to 2**L sites
+H = hamiltonians.chain(L) # get the Hamiltonian
+
+def f(r):
+    """Modulation of the hopping"""
+    length = 2**L # total length
+    omega0 = np.pi*2.*np.sqrt(2.)/(length/20) # base frequency
+    omega = omega0*(1 + r[0]/length) # position-dependent frequency
+    return 0.2*np.sin(omega*r[0]) # return correction to the hopping
 
 
+H.modify_hopping(f) # modify the hopping 
 
+SCF = H.get_SCF_Hubbard(U=3.0) # generate a selfconsistent object
+
+SCF.solve(use_qtci=True,use_kpm=True)
+Mz = SCF.Mz # selfconsistent magnetization
+```
+
+The moire Hamiltonian and resulting selfconsistent electronic order are
+![Alt text](images/1dstrainedmoire.png?raw=true "Interaction-driven order with KPQTC in a moire interface")
+
+
+# Documentation
+
+Documentation about the kernel polynomial tensor cross interpolation algorithm for interacting tight binding models can be found [here](https://github.com/joselado/qtcipy/blob/main/doc/user_guide.md)
 
 # Installation
 
