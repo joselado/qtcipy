@@ -106,6 +106,8 @@ The moire Hamiltonian and resulting selfconsistent electronic order are
 
 Documentation about the kernel polynomial tensor cross interpolation algorithm for interacting tight binding models can be found [here](https://github.com/joselado/qtcipy/blob/main/doc/user_guide.md)
 
+You can find a detailed discussion about the kernel polynomial tensor cross interpolation algorithm in [arXiv:2409.18898](https://arxiv.org/abs/2409.18898)
+
 # Installation
 
 You need to have Julia installed in your computer.
