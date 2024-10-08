@@ -6,7 +6,7 @@ from .qtcirecipestk.qtcikernels import random_kernel as random_qtci_kernel
 
 
 methods = ["maxm","accumulative"]
-methods = ["accumulative"]
+#methods = ["accumulative"]
 
 
 #### Acummulative mode has segfault randomly ####

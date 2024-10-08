@@ -60,6 +60,7 @@ def initial_qtci_kwargs(SCF,use_dynamical_qtci=False,
         qtci_kwargs = {"qtci_maxm":400} # reasonable guess
         qtci_kwargs["qtci_accumulative"] = True # accumulative mode
         qtci_kwargs["qtci_tol"] = 1e-3 # initial tol
+        qtci_kwargs["qtci_maxfrac"] = 0.05 # initial fraction
         SCF0 = SCF.copy() # make a copy
         SCF0.qtci_kwargs = qtci_kwargs # overwrite
         kw = cp(kwargs) # make a copy
@@ -71,12 +72,13 @@ def initial_qtci_kwargs(SCF,use_dynamical_qtci=False,
         kw["info"] = False
         kw["info_qtci"] = False
         kw["maxite"] = 1 # one iteration
-        mz = SCF0.H0.get_moire()*SCF0.MF[0] # make a guess
+#        mz = SCF0.H0.get_moire()*SCF0.MF[0] # make a guess
         # get some kwargs
         if use_dynamical_qtci: # use an adaptive QTCI
-            frac,qtci_kwargs = optimal_qtci(mz,recursive=True) 
-            SCF0.qtci_kwargs = qtci_kwargs # use these ones
+#            frac,qtci_kwargs = optimal_qtci(mz,recursive=True) 
+#            SCF0.qtci_kwargs = qtci_kwargs # use these ones
             SCF0.solve(**kw) # one iteration without accuracy
+            SCF0.qtci_kwargs["qtci_maxfrac"] = 0.2 # overwrite
         else: return qtci_kwargs
         print("SCF Initialization DONE")
         return SCF0.qtci_kwargs

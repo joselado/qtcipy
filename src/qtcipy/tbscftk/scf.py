@@ -27,6 +27,7 @@ class SCF_Hubbard():
         """Perform the SCF loop"""
         from .hubbard import SCF_Hubbard
         from .dynamicalqtci import initial_qtci_kwargs
+        print(self.qtci_kwargs)
         self.qtci_kwargs = initial_qtci_kwargs(self,**kwargs)
         for key in self.qtci_kwargs: kwargs[key] = self.qtci_kwargs[key]
         return SCF_Hubbard(self,**kwargs)

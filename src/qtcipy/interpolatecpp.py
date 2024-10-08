@@ -157,6 +157,7 @@ def get_ci(f, qgrid=None, nb=1,
 
 def accumulative_train(ci,qtci_tol=1e-3,qgrid=None,
         info_qtci=False,
+        qtci_maxfrac=0.95, # maximum fraction
         nb=1,f=None,**kwargs):
     """Train a QTCI using the accumulative mode"""
     if info_qtci:
@@ -169,13 +170,15 @@ def accumulative_train(ci,qtci_tol=1e-3,qgrid=None,
             ci.iterate(1) # iterate
             toli = ci.pivotError[len(ci.pivotError)-1] # tolerance in evaluated points
             tols.append(toli) # store
-        if np.max(tols)<qtci_tol: 
+        if np.mean(tols)<qtci_tol: 
 #            print("Accumulative reached error, stopping",np.min(tols))
             break # stop loop
         # other stopping criteria
         npoints = 2**nb
         nev = len(get_cache_info(f)[0])
-        if nev/npoints>0.95: 
+        if nev/npoints>qtci_maxfrac: # above threshold 
+#            print("Fraction",qtci_maxfrac)
+#            exit()
 #            print("Almost all points evaluated, stopping")
             break
     ci = xfacpy.to_tci2(ci) # to type two
