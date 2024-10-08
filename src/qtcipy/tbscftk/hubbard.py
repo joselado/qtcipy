@@ -137,18 +137,19 @@ def SCF_Hubbard(scf,maxerror=1e-3,maxite=100,
         ite += 1 # iteration
         hup = h0 + diags(U*(ddn_old-0.5),shape=h0.shape) # up Hamiltonian
         hdn = h0 + diags(U*(dup_old-0.5),shape=h0.shape) # down Hamiltonian
+        from .dynamicalqtci import merge_kwargs
+        # add the QTCI kwargs storeed in the object
+        kwargsall = merge_kwargs(kwargs,scf.qtci_kwargs,master=0) # all kwargs
         if chiral_AF: # by symmetry for chiral AF systems
-            mz = get_mz(hup,log=log0,**kwargs)
+            mz = get_mz(hup,log=log0,**kwargsall)
             dup = 0.5 + mz/2. # up density
             ddn = 0.5 - mz/2. # down density
         else: # compute explicitly
-            ddn = get_den(hdn,log=log0,**kwargs) # generate down density
-            dup = get_den(hup,log=log0,**kwargs) # generate up density
+            ddn = get_den(hdn,log=log0,**kwargsall) # generate down density
+            dup = get_den(hup,log=log0,**kwargsall) # generate up density
         # overwrite the QTCI keyword arguments
         from .dynamicalmixing import error_hubbard
-        from .dynamicalqtci import overwrite_qtci_kwargs
-        overwrite_qtci_kwargs(scf,kwargs) # overwrite parameters
-        print(kwargs)
+        print(kwargsall)
         error = error_hubbard([dup,ddn],[dup_old,ddn_old]) # compute error
 #        error = np.mean(np.abs(ddn-ddn_old) + np.abs(dup-dup_old)) # error
         if log is not None: # do the logs

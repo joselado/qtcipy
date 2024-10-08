@@ -54,9 +54,26 @@ def overwrite_qtci_kwargs(scf,kwargs,master="scf"):
             if master=="scf": # scf overwrites the kwargs
                 kwargs[key] = scf.qtci_kwargs[key]
             elif master=="kwargs": # kwargs overwrites the scf
-                if key in kwargs:
+                if key in kwargs: 
                     scf.qtci_kwargs[key] = kwargs[key] 
             else: raise
+
+def merge_kwargs(kwargs0,kwargs1,master=0):
+    """Merge two dictionaries, giving dominance to one"""
+    if kwargs0 is None: return kwargs1
+    if kwargs1 is None: return kwargs0
+    kwout = {} # empty dictionary
+    if master==0: # first dominates
+        for key in kwargs0:  kwout[key] = kwargs0[key] # loop over keys
+        for key in kwargs1:  
+            if key in kwout: pass # do nothing
+            else: kwout[key] = kwargs1[key] # store
+        return kwout # return dictionary
+    else: merge_kwargs(kwargs1,kwargs0,master=0) # call the other way
+        
+                       
+
+
 
 from copy import deepcopy as cp
 
