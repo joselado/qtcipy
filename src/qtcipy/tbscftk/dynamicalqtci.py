@@ -34,18 +34,29 @@ def overwrite_qtci_kwargs(kwargs,qtci_kwargs):
 
 
 
-def get_default(v):
+def get_default(qtci_maxm=400,
+        qtci_maxfrac=0.95,
+        qtci_tol=1e-2,
+        **kwargs
+        ):
     """Return a default set of parameters for the QTCI"""
-    qtci_kwargs = {"qtci_maxm":400} # reasonable guess
+    qtci_kwargs = {"qtci_maxm":qtci_maxm} # reasonable guess
     qtci_kwargs["qtci_accumulative"] = True # accumulative mode
-    qtci_kwargs["qtci_tol"] = 1e-3 # initial tol
+    qtci_kwargs["qtci_tol"] = qtci_tol # initial tol
+    qtci_kwargs["qtci_maxfrac"] = qtci_maxfrac # initial fraction
     return qtci_kwargs # return this
 
 
-def overwrite_qtci_kwargs(scf,kwargs):
+def overwrite_qtci_kwargs(scf,kwargs,master="scf"):
     """Overwrite the QTCI keyword arguments"""
     if scf.qtci_kwargs is not None: # if they are set
-        for key in scf.qtci_kwargs: kwargs[key] = scf.qtci_kwargs[key]
+        for key in scf.qtci_kwargs: 
+            if master=="scf": # scf overwrites the kwargs
+                kwargs[key] = scf.qtci_kwargs[key]
+            elif master=="kwargs": # kwargs overwrites the scf
+                if key in kwargs:
+                    scf.qtci_kwargs[key] = kwargs[key] 
+            else: raise
 
 from copy import deepcopy as cp
 
@@ -57,12 +68,8 @@ def initial_qtci_kwargs(SCF,use_dynamical_qtci=False,
     if "use_qtci" in kwargs:
         if not kwargs["use_qtci"]: return {} # return an empty list
     if SCF.qtci_kwargs is None: # first iteration
-        qtci_kwargs = {"qtci_maxm":400} # reasonable guess
-        qtci_kwargs["qtci_accumulative"] = True # accumulative mode
-        qtci_kwargs["qtci_tol"] = 1e-3 # initial tol
-        qtci_kwargs["qtci_maxfrac"] = 0.05 # initial fraction
-        SCF0 = SCF.copy() # make a copy
-        SCF0.qtci_kwargs = qtci_kwargs # overwrite
+        qtci_kwargs = get_default(**kwargs) # get the default
+        return qtci_kwargs # temporal fix
         kw = cp(kwargs) # make a copy
         kw["kpm_delta"] = 2.0
         kw["delta"] = 2.0
@@ -75,10 +82,13 @@ def initial_qtci_kwargs(SCF,use_dynamical_qtci=False,
 #        mz = SCF0.H0.get_moire()*SCF0.MF[0] # make a guess
         # get some kwargs
         if use_dynamical_qtci: # use an adaptive QTCI
+            SCF0 = SCF.copy() # make a copy
+            SCF0.qtci_kwargs = qtci_kwargs # overwrite
 #            frac,qtci_kwargs = optimal_qtci(mz,recursive=True) 
 #            SCF0.qtci_kwargs = qtci_kwargs # use these ones
+            SCF0.qtci_kwargs["qtci_maxfrac"] = 0.05 # initial fraction
             SCF0.solve(**kw) # one iteration without accuracy
-            SCF0.qtci_kwargs["qtci_maxfrac"] = 0.2 # overwrite
+            del SCF0.qtci_kwargs["qtci_maxfrac"] # delete
         else: return qtci_kwargs
         print("SCF Initialization DONE")
         return SCF0.qtci_kwargs

@@ -192,7 +192,8 @@ def accumulative_train(ci,qtci_tol=1e-3,qgrid=None,
 def rook_train(ci,qtci_tol=1e-3,qgrid=None,
         info_qtci=False,
         qtci_pivot1=None,
-        qtci_args = {}, # empty distionary
+        qtci_maxfrac=0.95, # maximum fraction
+        qtci_args = {}, # empty dictionary
         nb=1,f=None,
         **kwargs):
     """Rook restart mode"""
@@ -223,9 +224,11 @@ def rook_train(ci,qtci_tol=1e-3,qgrid=None,
             if err<qtci_tol: # tolerance reached, check a few random points
                 err_est = estimate_error(ci,f,nb=nb,qgrid=qgrid)
                 if err_est<qtci_tol: # error semms ok, stopping
-#                    if info_qtci:
-#                        print("QTCI pivot tol reached",err," stopping training")
                     break # stop loop
+        npoints = 2**nb
+        nev = len(get_cache_info(f)[0])
+        if nev/npoints>qtci_maxfrac: # above threshold 
+            break # stop
     # evaluate error #
     evf = len(get_cache_info(f)[0])/(2**nb) # percentage of evaluations
     err = ci.pivotError[len(ci.pivotError)-1] # error

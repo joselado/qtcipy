@@ -79,7 +79,7 @@ We will now compute a moire pattern with non-uniform strain
 from qtcipy.tbscftk import hamiltonians
 import numpy as np
 
-L = 14 # exponential length, leads to 2**L sites
+L = 16 # exponential length, leads to 2**L sites
 H = hamiltonians.chain(L) # get the Hamiltonian
 
 def f(r):

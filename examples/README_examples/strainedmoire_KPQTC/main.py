@@ -19,6 +19,7 @@ H.modify_hopping(f) # modify the hopping
 SCF = H.get_SCF_Hubbard(U=3.0) # generate a selfconsistent object
 
 SCF.solve(use_qtci=True,use_kpm=True,info=True,info_qtci=True,delta=1e-1,
+        qtci_maxfrac=0.2,
         maxite=10,use_dynamical_qtci=True,chiral_AF=True)
 Mz = SCF.Mz # selfconsistent magnetization
 
