@@ -87,7 +87,7 @@ a conventional mixing, you can activate the option with
 SCF.solve(mixing_strategy="plain")
 ```
 
-## Selfconsisten magnetization
+## Selfconsistent magnetization
 
 The selfconsistent magnetization can be extracted as 
 ```python
@@ -145,7 +145,7 @@ computing local DOS in large regions of a system at a low cost.
 The computational cost of this calculation scales as 1/delta.
 
 
-## The quantics tensor cross in the mean field
+## The quantics tensor cross matrix product state in the mean field
 
 The mean field is parametericed by quantics tensor cross at each step.
 By default, the QTCI architecture
@@ -192,6 +192,18 @@ from qtcipy import qtcirecipes
 qtcirecipes.methods = ["maxm","accumulative"] # you can remove any if you wish
 ```
 
+### Enforcing a fraction in the SCF
+
+If you want to enforce that only up to a specific fraction of the sites
+are evaluated, you can use the "qtci_macfrac" argument as
+
+```python
+SCF.solve(use_qtci=True,use_kpm = True,qtci_maxfrac=0.1)
+```
+
+the statement above will enforce that only 10% of the sites are evaluated.
+This option is useful if you want to precisely control the time spent in the
+calculation, at the expense of accuracy.
 
 ## Log with the performance of the mean field
 After performing a mean-field calculation you may want to see how the
