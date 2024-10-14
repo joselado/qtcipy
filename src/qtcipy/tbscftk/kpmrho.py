@@ -11,7 +11,7 @@ except:
     print(" 2) OR create an environmental variable PYQULAROOT with the address of pyqula in your system")
     exit()
 
-
+def rint(x): return int(np.round(x)) # round int
 
 
 def get_density_i_from_dos(m,fermi=0.,**kwargs):
@@ -134,7 +134,7 @@ def evaluate_interpolator(h,IP,dim=1,**kwargs):
     elif dim==2: # 2D
 #        raise
         print("Using 2D")
-        n = int(np.sqrt(nat)) # lateral size of the system
+        n = rint(np.sqrt(nat)) # lateral size of the system
         out = np.zeros(nat,dtype=np.float_) # initialize
         for i in range(n): 
             for j in range(n): 
@@ -171,7 +171,7 @@ def get_lim(h,dim=1,norb=1,**kwargs):
     elif dim==2: # two dimensional
         n = h.shape[0] # number of sites
         if norb>1: n = n//norb # by the number of orbitals
-        n = int(np.sqrt(n)) # lateral size of the system
+        n = rint(np.sqrt(n)) # lateral size of the system
         xlim = [0,n] # limits of the interpolation
         return xlim,xlim # return the limits
     else: raise # not implemented
@@ -185,13 +185,13 @@ def get_nbits(h,norb=1,dim=1,**kwargs):
     if norb>1: n = n//norb # number of cells
     if dim==1: pass # ignore for 1d
     elif dim==2: # 2d
-      n = int(np.sqrt(n)) # lateral size of the system
+      n = rint(np.sqrt(n)) # lateral size of the system
     else: raise
     nb = np.log(n)/np.log(2) # number of pseudospin sites
     if np.abs(int(nb)-nb)>1e-5:
         print("Number of points must be a power of 2")
         raise
-    return int(nb) # return number of bits 
+    return rint(nb) # return number of bits 
 
 
 
@@ -201,7 +201,7 @@ def get_function(h,dim=1,**kwargs):
     kpm_scale = estimate_bandwidth(h) # compute the scale just once
     kwargs["kpm_scale"] = kpm_scale # overwrite
     def f1d(i): # function to interpolate
-        ii = int(np.round(i)) # round the value
+        ii = rint(i) # round the value
         if not 0<=ii<h.shape[0]: # fix and say
             print("WARNING, you are out of bounds!!!!")
             if ii<0: ii = 0 # fix
@@ -210,9 +210,9 @@ def get_function(h,dim=1,**kwargs):
         return out
     def f2d(i,j): # function to interpolate
         n = h.shape[0] # number of sites
-        n = int(np.sqrt(n)) # lateral size of the system
+        n = rint(np.sqrt(n)) # lateral size of the system
         ii = n*i + j # index in real space
-        return get_density_i(h,i=int(ii),**kwargs)
+        return get_density_i(h,i=rint(ii),**kwargs)
     if dim==1: return f1d
     elif dim==2: return f2d
     else: raise
@@ -244,7 +244,7 @@ def get_dos_i(m,i=0,
     if kpm_scale is None: # if none provided
         scale = estimate_bandwidth(m) # estimate the bandwidth
     else: scale = kpm_scale # given from input
-    npol = int(npol_scale*scale/delta) # number of polynomials
+    npol = rint(npol_scale*scale/delta) # number of polynomials
     ne = npol*10 # scale the number of energies accordingly
     (es,ds) = kpm.ldos(m,i=i,ne=ne,kernel=kernel,kpm_prec=kpm_prec,
             scale=scale,
@@ -260,9 +260,9 @@ def estimate_qtci_maxm(h,R,f,qtci_tol=1e-2,**kwargs):
     nb = get_nbits(h,**kwargs) # return the number of bits
     lim = get_lim(h,**kwargs) # get the limits
     if callable(f): # if function provided
-        fo = lambda i: f(R[int(i),:]) # assume it is a function
+        fo = lambda i: f(R[rint(i),:]) # assume it is a function
     else:
-        fo = lambda i: f[int(i)] # assume it is an array/list
+        fo = lambda i: f[rint(i)] # assume it is an array/list
     IP = interpolate.Interpolator(fo,tol=qtci_tol,nb=nb,xlim=lim[0],
                 qtci_recursive = True,
                 **kwargs,

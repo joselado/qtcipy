@@ -4,6 +4,8 @@ from .tbscftk import discreteinterpolator
 from .qtcirecipestk.qtcikernels import random_kernel as random_qtci_kernel
 
 
+def rint(x): return int(np.round(x)) # round int
+
 
 methods = ["maxm","accumulative"]
 #methods = ["accumulative"]
@@ -77,7 +79,7 @@ def get_frac_args(v,qtci_error=1e-3,**kwargs):
     lim = get_lim(v,**kwargs)
     if np.mean(np.abs(v))<qtci_error/100: return 1.,None # flat distribution
     vi = v + qtci_error/100*(np.random.random(len(v))-0.5) # add noise
-    f = lambda i: vi[int(i)] # function
+    f = lambda i: vi[rint(i)] # function
     IP = get_interpolator(f,nb,lim,**kwargs) 
     from .qtcidistance import get_distance
     disf = get_distance() # get the distance function
@@ -113,13 +115,13 @@ def get_nbits(v,norb=1,dim=1,**kwargs):
     if norb>1: n = n//norb # number of cells
     if dim==1: pass # ignore for 1d
     elif dim==2: # 2d
-      n = int(np.sqrt(n)) # lateral size of the system
+      n = rint(np.sqrt(n)) # lateral size of the system
     else: raise
     nb = np.log(n)/np.log(2) # number of pseudospin sites
     if np.abs(int(nb)-nb)>1e-5:
         print("Number of points must be a power of 2")
         raise
-    return int(nb) # return number of bits
+    return rint(nb) # return number of bits
 
 
 
@@ -134,7 +136,7 @@ def get_lim(v,dim=1,norb=1,**kwargs):
     elif dim==2: # two dimensional
         n = h.shape[0] # number of sites
         if norb>1: n = n//norb # by the number of orbitals
-        n = int(np.sqrt(n)) # lateral size of the system
+        n = rint(np.sqrt(n)) # lateral size of the system
         xlim = [0,n] # limits of the interpolation
         return xlim,xlim # return the limits
     else: raise # not implemented
@@ -161,14 +163,14 @@ def optimal_maxm(v,qtci_error=1e-2,**kwargs):
     for itry in range(ntries): # try as many times
         norbi = norbs[np.random.randint(len(norbs))] # one choice at random
 #        for norbi in norbs: # loop over norbs
-        nb = np.log(len(v)/norbi)/np.log(2) ; nb = int(nb) # integer value
+        nb = np.log(len(v)/norbi)/np.log(2) ; nb = rint(nb) # integer value
         fullPivi = np.random.random()<0.5 # True or False randomly
         maxmi = pick_randomly(maxms) # randomly
         #### generate global pivots ####
         use_gp = pick_randomly([True,False]) # True or False randomly
         ################################
         vi = v + qtci_error/100*(np.random.random(len(v)) - 0.5) # slightly random
-        f = lambda i: vi[int(i)] # function to interpolate
+        f = lambda i: vi[rint(i)] # function to interpolate
         wi = [weights[norbi*i] for i in range(2**nb)] # redefine weight
         qtci_tol = qtci_error*pick_randomly([0.3,1.,3]) # pick one
         IP = discreteinterpolator.interpolate_norb(f,norb=norbi,xlim=[0,2**nb],
@@ -234,8 +236,8 @@ def optimal_accumulative(v,qtci_error=1e-2,**kwargs):
     for it in range(ntries): # these many tries, pick the best
         norbi = norbs[np.random.randint(len(norbs))] # one choice at random
         vi = v + qtci_error/100*(np.random.random(len(v)) - 0.5) # slightly random
-        f = lambda i: vi[int(i)] # function to interpolate
-        nb = np.log(len(v)/norbi)/np.log(2) ; nb = int(nb) # integer value
+        f = lambda i: vi[rint(i)] # function to interpolate
+        nb = np.log(len(v)/norbi)/np.log(2) ; nb = rint(nb) # integer value
         tol_fac = pick_randomly([1.0,0.5,2.]) # factors to consider
         qtci_tol = qtci_error*tol_fac # check a potential refactoring
         fullPivi = pick_randomly([True,False]) # full pivots
