@@ -140,6 +140,7 @@ def SCF_Hubbard(scf,maxerror=1e-3,maxite=100,
         from .dynamicalqtci import merge_kwargs
         # add the QTCI kwargs storeed in the object
         kwargsall = merge_kwargs(kwargs,scf.qtci_kwargs,master=0) # all kwargs
+#        print(kwargsall)
         if chiral_AF: # by symmetry for chiral AF systems
             mz = get_mz(hup,log=log0,**kwargsall)
             dup = 0.5 + mz/2. # up density

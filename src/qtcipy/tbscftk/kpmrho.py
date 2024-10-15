@@ -161,16 +161,16 @@ def get_interpolator(h,f,nb,lim,dim=1,backend="C++",
 
 
 
-def get_lim(h,dim=1,norb=1,**kwargs):
+def get_lim(h,dim=1,qtci_norb=1,**kwargs):
     """Return the limits"""
     if dim==1: # one dimensional
         n = h.shape[0] # number of sites
-        if norb>1: n = n//norb # by the number of orbitals
+        if qtci_norb>1: n = n//qtci_norb # by the number of orbitals
         xlim = [0,n] # limits of the interpolation
         return xlim,None
     elif dim==2: # two dimensional
         n = h.shape[0] # number of sites
-        if norb>1: n = n//norb # by the number of orbitals
+        if qtci_norb>1: n = n//qtci_norb # by the number of orbitals
         n = rint(np.sqrt(n)) # lateral size of the system
         xlim = [0,n] # limits of the interpolation
         return xlim,xlim # return the limits
@@ -179,10 +179,10 @@ def get_lim(h,dim=1,norb=1,**kwargs):
 
 
 
-def get_nbits(h,norb=1,dim=1,**kwargs):
+def get_nbits(h,qtci_norb=1,dim=1,**kwargs):
     """Get the number of required bits"""
     n = h.shape[0] # number of sites
-    if norb>1: n = n//norb # number of cells
+    if qtci_norb>1: n = n//qtci_norb # number of cells
     if dim==1: pass # ignore for 1d
     elif dim==2: # 2d
       n = rint(np.sqrt(n)) # lateral size of the system

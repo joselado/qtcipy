@@ -3,7 +3,7 @@ from ..qtcirecipes import get_frac_args
 from copy import deepcopy as cp
 import numpy as np
 
-optimizations = ["maxm","global_pivots","pivot1","tol"]
+optimizations = ["maxm","global_pivots","pivot1","tol","norb"]
 
 
 def refine_qtci_kwargs(v,kw,qtci_refine_ntries=5,**kwargs):
@@ -27,6 +27,8 @@ def refine_qtci_kwargs_single(v,kw,**kwargs):
         frac,kw = refine_tol(v,kw,**kwargs) # refine the tolerance
     if "kernel" in optimizations:
         frac,kw = refine_kernel(v,kw,failsafe,**kwargs) # optimize the kernel
+    if "norb" in optimizations:
+        frac,kw = refine_norb(v,kw,**kwargs) # optimize the kernel
     return frac,kw # return the optimized result
 
 
@@ -38,10 +40,21 @@ def refine_maxm(v,kw,**kwargs):
     ps[2] = 1.0 + 0.3*np.random.random() # random increase
     def convert(p,f):
         if p*f<3.: return 3 # minimum bond dim
-        elif p*f>400: return 400 # maximum bond dim
+        elif p*f>400: return 800 # maximum bond dim
         else: return int(np.round(p*f)) # the closest integer
     return refine_parameter(v,kw,name="qtci_maxm",p0=10,convert=convert,
             scales=ps,**kwargs)
+
+
+
+def refine_norb(v,kw,**kwargs):
+    """Refine the number of orbitals"""
+    ps = [1,2,4]
+    def convert(p,f):
+        return f # return the Norb to try
+    return refine_parameter(v,kw,name="qtci_norb",p0=1,convert=convert,
+            scales=ps,**kwargs)
+
 
 
 
@@ -114,7 +127,7 @@ def refine_global_pivots(v,kw,**kwargs):
 def refine_parameter(v,kw,name=None,p0=None,convert=lambda x,y: x*y,
         failsafe=True,in_qtci_args=False,
         scales = [1.],**kwargs):
-    """Change the maxm to optimize the QTCI"""
+    """Change a parameter to optimize the QTCI"""
     kw0 = cp(kw) # make a copy, just in case this fails
     if kw is None: return 1.0,None
     # input is all the kwargs of QTCI, the variable is in qtci_kernel
@@ -127,7 +140,7 @@ def refine_parameter(v,kw,name=None,p0=None,convert=lambda x,y: x*y,
             if name in kw["qtci_args"]: # check if the parameter is present
                 p = kw["qtci_args"][name] # get the parameter
         else: # dictionary does not exist, create it
-            kw["qtci_args"] = {name : p0} # create teh dictionary
+            kw["qtci_args"] = {name : p0} # create the dictionary
     ps = scales # parameters redefinitions to try
     kwlist = [] # empty list
     for pi in ps: # loop
