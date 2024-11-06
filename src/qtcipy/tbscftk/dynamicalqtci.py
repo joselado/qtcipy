@@ -37,6 +37,7 @@ def overwrite_qtci_kwargs(kwargs,qtci_kwargs):
 def get_default(qtci_maxm=400,
         qtci_maxfrac=0.95,
         qtci_tol=1e-2,
+        qtci_norb = 1,
         **kwargs
         ):
     """Return a default set of parameters for the QTCI"""
@@ -44,6 +45,7 @@ def get_default(qtci_maxm=400,
     qtci_kwargs["qtci_accumulative"] = True # accumulative mode
     qtci_kwargs["qtci_tol"] = qtci_tol # initial tol
     qtci_kwargs["qtci_maxfrac"] = qtci_maxfrac # initial fraction
+    qtci_kwargs["qtci_norb"] = qtci_norb # initial fraction
     return qtci_kwargs # return this
 
 
