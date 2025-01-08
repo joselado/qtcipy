@@ -236,13 +236,14 @@ from pyqula import kpm
 def get_dos_i(m,i=0,
         delta=1e-1, # effective smearing
         kpm_prec="single",
-        kpm_scale = None, # scale of KPm method
+        kpm_scale = None, # scale of KPM method
         kernel="jackson", # kernel 
         npol_scale=4, # rescale number of polynomials
         **kwargs):
     """Return electronic density at site i"""
     if kpm_scale is None: # if none provided
         scale = estimate_bandwidth(m) # estimate the bandwidth
+        scale = scale*1.2 # a bit more
     else: scale = kpm_scale # given from input
     npol = rint(npol_scale*scale/delta) # number of polynomials
     ne = npol*10 # scale the number of energies accordingly

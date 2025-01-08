@@ -15,15 +15,6 @@ H.modify_hopping(f)
 # get the SCF object
 SCF = H.get_SCF_Hubbard(U=3.0) # generate a selfconsistent object
 
-#m = SCF.estimate_qtci_maxm(f)
-
-#SCF = SCF.load() ; MF = SCF.MF
-
-#m = 10
-#print(m) ; exit()
-
-
-#SCF.solve(info=True) # solve the SCF
 SCF.solve(info=True,
         use_qtci=True,use_kpm = True,
         info_qtci = True,
