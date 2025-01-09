@@ -12,7 +12,7 @@ ii = 2**(L-1) # bulk
 jj = 0 # edge
 
 # perform the SCF
-SCF = H.get_SCF_Hubbard(U=3.0)
+SCF = H.get_SCF_Hubbard(U=3.0,U_profile=None)
 SCF.solve(use_qtci=False,use_kpm = False)
 
 
