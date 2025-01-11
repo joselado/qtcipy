@@ -12,7 +12,8 @@ Some of the examples use the library for electronic structure [pyqula](https://g
 
 Below you can see a minimal example of a mean field calculation using
 the quantics tensor cross interpolation algorithm combined with
-the kernel polynomial method for an interacting Hubbard Hamiltonian.
+the kernel polynomial method for an interacting Hubbard Hamiltonian
+presented in [2D Materials 12 015018 (2024)](https://iopscience.iop.org/article/10.1088/2053-1583/ad9d59)([arXiv:2409.18898](https://arxiv.org/abs/2409.18898)).
 
 ### Moire in an interacting one-dimensional model
 
@@ -106,7 +107,7 @@ The moire Hamiltonian and resulting selfconsistent electronic order are
 
 Documentation about the kernel polynomial tensor cross interpolation algorithm for interacting tight binding models can be found [here](https://github.com/joselado/qtcipy/blob/main/doc/user_guide.md)
 
-You can find a detailed discussion about the kernel polynomial tensor cross interpolation algorithm for large interacting tight binding models in [arXiv:2409.18898](https://arxiv.org/abs/2409.18898)
+You can find a detailed discussion about the kernel polynomial tensor cross interpolation algorithm for large interacting tight binding models in [2D Materials 12 015018 (2024)](https://iopscience.iop.org/article/10.1088/2053-1583/ad9d59)([arXiv:2409.18898](https://arxiv.org/abs/2409.18898))
 
 # Installation
 
