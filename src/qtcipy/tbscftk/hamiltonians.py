@@ -21,6 +21,9 @@ class Hamiltonian():
     def get_density_i(self,**kwargs):
         from .hubbard import get_density_i
         return get_density_i(self.H,**kwargs)
+    def get_density(self,**kwargs):
+        from .hubbard import get_den
+        return get_den(self.H,**kwargs)
     def get_dos_i(self,w=None,**kwargs):
         from .kpmrho import get_dos_i
         if w is None: w = np.linspace(-5.,5.,1000)
